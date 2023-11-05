@@ -12,30 +12,27 @@
 function ignoreFake () {
     'use strict';
 
-    const trollName = 'fakePSUinsider';
-    const $itemRows = $(".replies-item");
+  const trollNames = ['fakePSUinsider'];
+  const $itemRows = $(".replies-item");
 
-    console.log('ITEM ROWS');
-    console.log($itemRows);
+  const $rowsToHide = $itemRows.filter(function(idx) {
+      const $userName = $(this).find('.user-name').text();
+      let $quotedUser;
 
-    const $rowsToHide = $itemRows.filter(function(idx) {
-        const $userName = $(this).find('.user-name').text();
-        let $quotedUser;
+      const $blockQuoteSection = $(this).find('.block-quote-section');
 
-        const $blockQuoteSection = $(this).find('.block-quote-section');
+      if ($blockQuoteSection) {
+          const $userNamePath = $blockQuoteSection.find('a').attr('href');
 
-        if ($blockQuoteSection) {
-            const $userNamePath = $blockQuoteSection.find('a').attr('href');
+          if ($userNamePath && $userNamePath.startsWith('/user/')) {
+              $quotedUser = $userNamePath.split('/')[2];
+          }
+      }
 
-            if ($userNamePath && $userNamePath.startsWith('/user/')) {
-                $quotedUser = $userNamePath.split('/')[2];
-            }
-        }
+      return trollNames.includes($userName) || trollNames.includes($quotedUser);
+  });
 
-        return [$userName, $quotedUser].includes(trollName);
-    });
-
-    $rowsToHide.hide();
+  $rowsToHide.hide();
 }
 
 // Options for the observer (which mutations to observe)

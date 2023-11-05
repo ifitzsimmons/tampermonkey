@@ -9,11 +9,14 @@
 // @grant        none
 // ==/UserScript==
 
-(function() {
+function ignoreFake () {
     'use strict';
 
     const trollName = 'fakePSUinsider';
     const $itemRows = $(".replies-item");
+
+    console.log('ITEM ROWS');
+    console.log($itemRows);
 
     const $rowsToHide = $itemRows.filter(function(idx) {
         const $userName = $(this).find('.user-name').text();
@@ -33,4 +36,12 @@
     });
 
     $rowsToHide.hide();
-})();
+}
+
+// Options for the observer (which mutations to observe)
+const config = { attributes: true, childList: true, subtree: true };
+const observer = new MutationObserver(ignoreFake);
+observer.observe(document.querySelector('ul.board-pagination'), config);
+ignoreFake();
+
+
